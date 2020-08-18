@@ -8,15 +8,11 @@ const app = new Koa();
 // 配置静态web服务器的中间件
 // app.use(KoaStatic(path.join(__dirname)))
 
-app.use(views(path.join(__dirname, '../views'), {
+app.use(views(path.join(__dirname, './views'), {
   extension: 'html'
 }))
 
-app.use(async (ctx, next) => {
-  console.log(5656656)
-  await ctx.render('index')
-  await next()
-})
+
 
 app
   .use(router.routes())
