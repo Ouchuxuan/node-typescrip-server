@@ -5,8 +5,9 @@
    "username": "root",
    "password": "yundun2733",
    "database": "node_cloudmap3",
-   "synchronize": true,
-   "logging": false,
+   "synchronize": false,
+   "logging": true,
+   "maxQueryExecutionTime":true,
    "entities": [
       "src/entity/**/*.ts"
    ],

@@ -1,9 +1,10 @@
+import indexRouter from './front';
+import userRouter from './user';
 import Router from 'koa-router'
-import * as Koa from 'koa'
-const router = new Router()
 
-router.get('/a', async (ctx:Koa.BaseContext) => {
-  await ctx.render('index')
-})
+const appRouter: Router[] = [
+  indexRouter,
+  userRouter,
+]
 
-export default router
+export default appRouter

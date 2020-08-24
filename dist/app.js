@@ -13,8 +13,8 @@ app.use(koa_bodyparser_1.default());
 app.use(koa_views_1.default(path_1.default.join(__dirname, '../src/views'), {
     extension: 'html'
 }));
-app
-    .use(index_1.default.routes())
-    .use(index_1.default.allowedMethods());
+index_1.default.forEach(function (router) {
+    app.use(router.routes()).use(router.allowedMethods());
+});
 app.listen(3000);
 console.log('server is listening at port 3000');

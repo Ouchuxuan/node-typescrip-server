@@ -3,7 +3,7 @@ import "reflect-metadata";
 import path from 'path';
 import views from 'koa-views';
 import bodyParser from 'koa-bodyparser'
-import router from './routes/index';
+import appRouter from './routes/index';
 const app = new Koa();
 
 // 配置静态web服务器的中间件
@@ -13,10 +13,10 @@ app.use(views(path.join(__dirname, '../src/views'), {
 }))
 
 
+appRouter.forEach(router=>{
+  app.use(router.routes()).use(router.allowedMethods())
+})
 
-app
-  .use(router.routes())
-  .use(router.allowedMethods());
 
 
 app.listen(3000)
