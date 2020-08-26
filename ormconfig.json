@@ -3,23 +3,25 @@
    "host": "127.0.0.1",
    "port": 3306,
    "username": "root",
-   "password": "123456",
+   "password": "yundun2733",
    "database": "node_cloudmap3",
    "synchronize": false,
    "logging": true,
    "maxQueryExecutionTime":true,
    "entities": [
-      "src/entity/**/*.ts"
+      "dist/entity/**/*.js"
    ],
    "migrations": [
-      "src/migration/**/*.ts"
+      "dist/migration/**/*.js"
    ],
    "subscribers": [
-      "src/subscriber/**/*.ts"
+      "dist/subscriber/**/*.js"
    ],
    "cli": {
-      "entitiesDir": "src/entity",
-      "migrationsDir": "src/migration",
-      "subscribersDir": "src/subscriber"
-   }
+      "entitiesDir": "dist/entity",
+      "migrationsDir": "dist/migration",
+      "subscribersDir": "dist/subscriber"
+   },
+   "migrationsTableName":"migrations"
+
 }

@@ -1,9 +1,9 @@
 import Router from 'koa-router'
-import * as Koa from 'koa'
 const router = new Router()
+import { addUser } from '../controllers/user'
 
-router.get('/user', async (ctx:Koa.BaseContext) => {
-  ctx.body = '用户API'
+router.get('/user', async (ctx, next) => {
+  addUser(ctx, next)
 })
 
 export default router

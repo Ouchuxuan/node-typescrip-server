@@ -1,18 +1,27 @@
-import {Entity, PrimaryGeneratedColumn, Column} from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable } from "typeorm";
+import { Role } from './Role';
 
+
+// User与Role是多对多的关系
 @Entity()
 export class User {
 
-    @PrimaryGeneratedColumn()
+    @PrimaryGeneratedColumn({ type: 'int' })
     id: number;
+    
+    @Column({ type: 'varchar', length: 20 })
+    user_name: string;
 
-    @Column()
-    firstName: string;
+    @Column({ type: 'varchar', length: 120 })
+    password: string;
 
-    @Column()
-    lastName: string;
+    @Column({ type: 'datetime' })
+    create_time: string;
 
-    @Column()
-    age: number;
+    @ManyToMany(type => Role, role=>role.users,{
+        eager:true
+    })
+    @JoinTable()
+    roels: Role[]
 
 }

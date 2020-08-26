@@ -1,6 +1,6 @@
 import path from 'path';
 // 日志根目录
-const baseLogPath = path.resolve(__dirname, '../log');
+const baseLogPath = path.resolve(__dirname, '../../log');
 
 // 错误日志目录
 const errorPath = '/error';
@@ -21,10 +21,14 @@ const responsePath = '/response';
 // 响应日志文件名
 const responseFileName = 'response';
 // 响应日志输出完整路径
+const responseLogPath = baseLogPath + responsePath + '/' + responseFileName;
 
 export default {
   // 日志格式等设置
   appenders: {
+    stdout: {//控制台输出
+      type: 'console'
+    },
     console: {
       type: 'console'
     },
@@ -67,6 +71,22 @@ export default {
         type: 'basic'
       }
     }
-  }
-
+  },
+  // 供外部调用的名称和对应设置定义
+  categories: {
+    default: {
+      appenders: ['console'], level: 'all'
+    },
+    resLogger: {
+      appenders: ['resLogger'], level: 'info'
+    },
+    errorLogger: {
+      appenders: ['errorLogger'], level: 'error'
+    },
+    http: {
+      appenders: ['http'], level: 'info'
+    }
+  },
+  baseLogPath,
+  replaceConsole: true
 }
