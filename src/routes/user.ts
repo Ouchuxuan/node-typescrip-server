@@ -1,9 +1,12 @@
 import Router from 'koa-router'
-const router = new Router()
-import { addUser } from '../controllers/user'
+const router = new Router({
+  prefix: '/api/v1/user'
+})
+import { addUser, login } from '../controllers/user'
 
-router.get('/user', async (ctx, next) => {
-  addUser(ctx, next)
+// api/v1/user/login
+router.post('/login', (ctx, next) => {
+  login(ctx, next)
 })
 
 export default router

@@ -13,7 +13,7 @@ var User = /** @class */ (function () {
         tslib_1.__metadata("design:type", Number)
     ], User.prototype, "id", void 0);
     tslib_1.__decorate([
-        typeorm_1.Column({ type: 'varchar', length: 20 }),
+        typeorm_1.Column({ type: 'varchar', length: 20, unique: true }),
         tslib_1.__metadata("design:type", String)
     ], User.prototype, "user_name", void 0);
     tslib_1.__decorate([
@@ -21,8 +21,8 @@ var User = /** @class */ (function () {
         tslib_1.__metadata("design:type", String)
     ], User.prototype, "password", void 0);
     tslib_1.__decorate([
-        typeorm_1.Column({ type: 'datetime' }),
-        tslib_1.__metadata("design:type", String)
+        typeorm_1.CreateDateColumn(),
+        tslib_1.__metadata("design:type", Date)
     ], User.prototype, "create_time", void 0);
     tslib_1.__decorate([
         typeorm_1.ManyToMany(function (type) { return Role_1.Role; }, function (role) { return role.users; }, {

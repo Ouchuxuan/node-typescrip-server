@@ -1,7 +1,7 @@
 import {MigrationInterface, QueryRunner} from "typeorm";
 
-export class PostRefactoring1598437483361 implements MigrationInterface {
-    name = 'PostRefactoring1598437483361'
+export class bbbb1598495204435 implements MigrationInterface {
+    name = 'bbbb1598495204435'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query("CREATE TABLE `user` (`id` int NOT NULL AUTO_INCREMENT, `user_name` varchar(20) NOT NULL, `password` varchar(120) NOT NULL, `create_time` datetime NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB");

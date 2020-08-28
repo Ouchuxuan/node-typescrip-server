@@ -6,7 +6,9 @@ import bodyParser from 'koa-bodyparser'
 import { createConnection } from "typeorm";
 import appRouter from './routes/index';
 import loggerMiddleware from './middlewares/log';
+import config from './config'
 
+// class-validator 用于表单校验
 
 const app = new Koa();
 
@@ -54,5 +56,5 @@ appRouter.forEach(router => {
 
 
 
-app.listen(3000)
-console.log('server is listening at port 3000')
+app.listen(config.port)
+console.log(`server is listening at port ${config.port}`)

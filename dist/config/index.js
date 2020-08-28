@@ -16,5 +16,11 @@ exports.default = {
         },
         omitNull: false,
         timezone: '+08:00' //  解决时差 - 默认存储时间存在8小时误差
-    }
+    },
+    redisConfig: {
+        port: 6379,
+        password: 'yundun2733',
+        host: '127.0.0.1',
+    },
+    port: 8090,
 };

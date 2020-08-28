@@ -14,5 +14,15 @@ export default {
     },
     omitNull: false,    //  null 是否通过SQL语句查询
     timezone: '+08:00'  //  解决时差 - 默认存储时间存在8小时误差
-  }
+  },
+  redisConfig: {
+    port: 6379,         // Redis port
+    password:'yundun2733',
+    host: '127.0.0.1',   // Redis host
+    // prefix: '', //存诸前缀
+    // ttl: 0,  //过期时间   
+    // family: 4,
+    // db: 0
+  },
+  port: 8090,
 }
