@@ -17,7 +17,7 @@ export default {
   },
   redisConfig: {
     port: 6379,         // Redis port
-    password:'yundun2733',
+    password: 'yundun2733',
     host: '127.0.0.1',   // Redis host
     // prefix: '', //存诸前缀
     // ttl: 0,  //过期时间   
@@ -25,4 +25,5 @@ export default {
     // db: 0
   },
   port: 8090,
+  secretKey: 'you see you one day day de'
 }

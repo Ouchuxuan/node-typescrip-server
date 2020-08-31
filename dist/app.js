@@ -5,6 +5,7 @@ var koa_1 = tslib_1.__importDefault(require("koa"));
 require("reflect-metadata");
 var path_1 = tslib_1.__importDefault(require("path"));
 var koa_views_1 = tslib_1.__importDefault(require("koa-views"));
+var koa_onerror_1 = tslib_1.__importDefault(require("koa-onerror"));
 var koa_bodyparser_1 = tslib_1.__importDefault(require("koa-bodyparser"));
 var typeorm_1 = require("typeorm");
 var index_1 = tslib_1.__importDefault(require("./routes/index"));
@@ -12,6 +13,7 @@ var log_1 = tslib_1.__importDefault(require("./middlewares/log"));
 var config_1 = tslib_1.__importDefault(require("./config"));
 // class-validator 用于表单校验
 var app = new koa_1.default();
+koa_onerror_1.default(app);
 // middlewares
 app.use(log_1.default());
 // 配置静态web服务器的中间件

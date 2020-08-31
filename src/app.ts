@@ -2,6 +2,7 @@ import Koa from 'koa';
 import "reflect-metadata";
 import path from 'path';
 import views from 'koa-views';
+import onerror from 'koa-onerror';
 import bodyParser from 'koa-bodyparser'
 import { createConnection } from "typeorm";
 import appRouter from './routes/index';
@@ -12,7 +13,7 @@ import config from './config'
 
 const app = new Koa();
 
-
+onerror(app)
 // middlewares
 app.use(loggerMiddleware())
 // 配置静态web服务器的中间件
