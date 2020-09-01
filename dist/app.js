@@ -5,7 +5,6 @@ var koa_1 = tslib_1.__importDefault(require("koa"));
 require("reflect-metadata");
 var path_1 = tslib_1.__importDefault(require("path"));
 var koa_views_1 = tslib_1.__importDefault(require("koa-views"));
-var koa_onerror_1 = tslib_1.__importDefault(require("koa-onerror"));
 var koa_bodyparser_1 = tslib_1.__importDefault(require("koa-bodyparser"));
 var typeorm_1 = require("typeorm");
 var index_1 = tslib_1.__importDefault(require("./routes/index"));
@@ -13,7 +12,6 @@ var log_1 = tslib_1.__importDefault(require("./middlewares/log"));
 var config_1 = tslib_1.__importDefault(require("./config"));
 // class-validator 用于表单校验
 var app = new koa_1.default();
-koa_onerror_1.default(app);
 // middlewares
 app.use(log_1.default());
 // 配置静态web服务器的中间件
@@ -41,26 +39,30 @@ var connectDatabase = function () { return tslib_1.__awaiter(void 0, void 0, voi
     });
 }); };
 connectDatabase();
-// logger
+// logger&&错误捕捉
 app.use(function (ctx, next) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
+    var error_2;
     return tslib_1.__generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, next()];
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, next()];
             case 1:
                 _a.sent();
-                try {
-                    // 开始进入到下一个中间件
-                    if (ctx.status === 404) {
-                        ctx.throw(404);
-                    }
-                    // 记录响应日志
-                    ctx.logger.logResponse(ctx, new Date());
+                // 开始进入到下一个中间件
+                if (ctx.status === 404) {
+                    ctx.throw(404);
                 }
-                catch (error) {
-                    // 记录异常日志
-                    ctx.logger.logError(ctx, error, new Date());
-                }
-                return [2 /*return*/];
+                // 记录响应日志
+                ctx.logger.logResponse(ctx, new Date());
+                return [3 /*break*/, 3];
+            case 2:
+                error_2 = _a.sent();
+                // 记录异常日志
+                ctx.logger.logError(ctx, error_2, new Date());
+                console.error(error_2);
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
         }
     });
 }); });

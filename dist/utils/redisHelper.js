@@ -17,18 +17,18 @@ var RedisHelper = /** @class */ (function () {
             password: config_1.default.redisConfig.password
         });
     };
-    RedisHelper.prototype.set = function (key, value, expiryMode, time) {
+    RedisHelper.prototype.set = function (key, value, time) {
         if (time === void 0) { time = 0; }
         return tslib_1.__awaiter(this, void 0, void 0, function () {
             return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         if (!time) return [3 /*break*/, 2];
-                        return [4 /*yield*/, this.redisInstance.set(key, value, expiryMode, time)];
+                        return [4 /*yield*/, this.redisInstance.set(key, value, 'EX', time)];
                     case 1:
                         _a.sent();
                         return [3 /*break*/, 4];
-                    case 2: return [4 /*yield*/, this.redisInstance.set(key, value, expiryMode)];
+                    case 2: return [4 /*yield*/, this.redisInstance.set(key, value, 'EX')];
                     case 3:
                         _a.sent();
                         _a.label = 4;

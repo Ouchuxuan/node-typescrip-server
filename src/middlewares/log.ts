@@ -1,7 +1,6 @@
-import logConfig from '../config/log-config';
+import logConfig from '../config/logConfig';
 import * as log4js from 'log4js';
 import * as Koa from 'koa';
-import {dateFormat} from '../utils/time'
 import moment from 'moment'
 // 加载配置文件
 log4js.configure(logConfig);

@@ -1,5 +1,5 @@
 import Router from 'koa-router'
-import { login, addUser } from '../controllers/user'
+import * as controllers from '../controllers/user'
 
 
 const router = new Router({
@@ -7,9 +7,12 @@ const router = new Router({
 })
 
 // api/v1/user/login
-router.post('/login', login)
+router.post('/login', controllers.login)
 
 // api/v1/user/add_user
-router.post('/add_user', addUser)
+router.post('/add_user', controllers.addUser)
+
+// api/v1/user/logout
+router.get('/logout', controllers.logout)
 
 export default router

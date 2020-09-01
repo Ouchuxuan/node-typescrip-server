@@ -2,7 +2,6 @@ import Koa from 'koa';
 import "reflect-metadata";
 import path from 'path';
 import views from 'koa-views';
-import onerror from 'koa-onerror';
 import bodyParser from 'koa-bodyparser'
 import { createConnection } from "typeorm";
 import appRouter from './routes/index';
@@ -13,7 +12,6 @@ import config from './config'
 
 const app = new Koa();
 
-onerror(app)
 // middlewares
 app.use(loggerMiddleware())
 // 配置静态web服务器的中间件
@@ -34,10 +32,10 @@ const connectDatabase = async () => {
 connectDatabase();
 
 
-// logger
+// logger&&错误捕捉
 app.use(async (ctx, next) => {
-  await next();
   try {
+    await next();
     // 开始进入到下一个中间件
     if (ctx.status === 404) {
       ctx.throw(404);
@@ -47,6 +45,7 @@ app.use(async (ctx, next) => {
   } catch (error) {
     // 记录异常日志
     ctx.logger.logError(ctx, error, new Date());
+    console.error(error)
   }
 });
 

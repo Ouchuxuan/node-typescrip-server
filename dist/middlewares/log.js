@@ -1,11 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = require("tslib");
-var log_config_1 = tslib_1.__importDefault(require("../config/log-config"));
+var logConfig_1 = tslib_1.__importDefault(require("../config/logConfig"));
 var log4js = tslib_1.__importStar(require("log4js"));
 var moment_1 = tslib_1.__importDefault(require("moment"));
 // 加载配置文件
-log4js.configure(log_config_1.default);
+log4js.configure(logConfig_1.default);
 var logUtil = {};
 // 调用预先定义的日志名称
 var resLogger = log4js.getLogger('resLogger');
