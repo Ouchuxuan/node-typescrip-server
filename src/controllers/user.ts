@@ -1,12 +1,13 @@
 import { getManager } from 'typeorm';
 import { Context, Next } from 'koa';
 import { User } from '../entity/User';
-import { responseHelper } from '../utils/responseHelper';
+import { responseHelper, RESCODE } from '../utils/responseHelper';
 import { checkPasswordHash } from '../utils/common'
 import { v4 as uuidV4 } from 'uuid'
 import RedisHelper from '../utils/redisHelper';
 import jwt from 'jsonwebtoken';
 import config from '../config';
+import { checkUserRole } from '../services/userAuth';
 
 export const addUser = (ctx: Context, next: Next) => {
   const userRepository = getManager().getRepository(User);
@@ -21,14 +22,14 @@ export const addUser = (ctx: Context, next: Next) => {
 export const login = async (ctx: Context, next: Next) => {
   const { body: { username, passward } } = ctx.request;
   if (!username || !passward) {
-    ctx.body = responseHelper(400)
+    ctx.body = responseHelper(RESCODE.REQUESTERROR)
   }
   // 在数据库中查找相关的用户
   // `select * from user where user_name = username`
   const userRepository = getManager().getRepository(User);
   const result = await userRepository.find({ where: { user_name: username } })
   if (result.length === 0) {
-    ctx.body = responseHelper(441);
+    ctx.body = responseHelper(RESCODE.USERNOTEXIST);
     return;
   }
   const databaseUsername = result[0].user_name;
@@ -50,14 +51,27 @@ export const login = async (ctx: Context, next: Next) => {
       token: userToken,
       username: databaseUsername
     }
-    ctx.body = responseHelper(200, result)
+    ctx.body = responseHelper(RESCODE.SUCCESS, result)
   } else {
-    ctx.body = responseHelper(443)
+    ctx.body = responseHelper(RESCODE.PASSWORDERROR)
   }
 }
 
 export const logout = (ctx: Context, next: Next) => {
   const clientToken = ctx.request.header['authorization'];
   // 通过token的payload获取id_card，在redis里面删掉,然后成功登出
-  ctx.body = responseHelper(200, {clientToken})
+  const userData = jwt.verify(clientToken, config.secretKey);
+  const idCard = (userData as any).id_card;
+  const redis = new RedisHelper(0);
+  const key = `session:${idCard}`;
+  redis.delete(key)
+  ctx.body = responseHelper(RESCODE.SUCCESS)
+}
+
+
+export const test = async (ctx: Context, next: Next) => {
+  // ctx.body = responseHelper(RESCODE.SUCCESS)
+  console.log('test - middleware1')
+  await next()
+  console.log(1111)
 }

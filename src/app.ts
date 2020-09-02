@@ -6,6 +6,7 @@ import bodyParser from 'koa-bodyparser'
 import { createConnection } from "typeorm";
 import appRouter from './routes/index';
 import loggerMiddleware from './middlewares/log';
+import tokenAuthMiddleware from './middlewares/tokenAuth';
 import config from './config'
 
 // class-validator 用于表单校验
@@ -31,7 +32,6 @@ const connectDatabase = async () => {
 
 connectDatabase();
 
-
 // logger&&错误捕捉
 app.use(async (ctx, next) => {
   try {
@@ -48,6 +48,9 @@ app.use(async (ctx, next) => {
     console.error(error)
   }
 });
+
+
+app.use(tokenAuthMiddleware(/\/login/));
 
 // router
 appRouter.forEach(router => {

@@ -12,4 +12,9 @@ router.post('/login', controllers.login);
 router.post('/add_user', controllers.addUser);
 // api/v1/user/logout
 router.get('/logout', controllers.logout);
+// api/v1/user/test
+router.get('/test', controllers.test, function (ctx, next) {
+    console.log('test - middleware2');
+    ctx.body = '1111';
+});
 exports.default = router;

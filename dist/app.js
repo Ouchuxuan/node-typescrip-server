@@ -9,6 +9,7 @@ var koa_bodyparser_1 = tslib_1.__importDefault(require("koa-bodyparser"));
 var typeorm_1 = require("typeorm");
 var index_1 = tslib_1.__importDefault(require("./routes/index"));
 var log_1 = tslib_1.__importDefault(require("./middlewares/log"));
+var tokenAuth_1 = tslib_1.__importDefault(require("./middlewares/tokenAuth"));
 var config_1 = tslib_1.__importDefault(require("./config"));
 // class-validator 用于表单校验
 var app = new koa_1.default();
@@ -66,6 +67,7 @@ app.use(function (ctx, next) { return tslib_1.__awaiter(void 0, void 0, void 0, 
         }
     });
 }); });
+app.use(tokenAuth_1.default(/\/login/));
 // router
 index_1.default.forEach(function (router) {
     app.use(router.routes()).use(router.allowedMethods());

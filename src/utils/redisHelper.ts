@@ -8,8 +8,7 @@ import config from '../config';
 // EXPIREAT 将key的过期时间设置为timestamp所代表的的秒数的时间戳
 // PEXPIREAT 将key的过期时间设置为timestamp所代表的的毫秒数的时间戳
 
-type expiryMode = 'EX' | 'PEXPIRE' | 'EXPIREAT' | 'PEXPIREAT'
-class RedisHelper {
+export default class RedisHelper {
   protected redisInstance: Redis
   protected db: number
   constructor(db: number = 0) {
@@ -33,9 +32,11 @@ class RedisHelper {
     }
   }
 
-  public async get(key) {
+  public async get(key: string) {
     return await this.redisInstance.get(key)
   }
-}
 
-export default RedisHelper
+  public async delete(...keys: RedisClient.KeyType[]) {
+    await this.redisInstance.del(keys)
+  }
+}

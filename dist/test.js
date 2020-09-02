@@ -1,3 +1,5 @@
-const uuid  = require('uuid')
-const test = uuid.v4()
-console.log(test)
+function test(...arg){
+  console.log(arg)
+}
+
+console.log(test(1,2,3))

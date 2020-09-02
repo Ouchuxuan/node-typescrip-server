@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.logout = exports.login = exports.addUser = void 0;
+exports.test = exports.logout = exports.login = exports.addUser = void 0;
 var tslib_1 = require("tslib");
 var typeorm_1 = require("typeorm");
 var User_1 = require("../entity/User");
@@ -26,14 +26,14 @@ exports.login = function (ctx, next) { return tslib_1.__awaiter(void 0, void 0, 
             case 0:
                 _a = ctx.request.body, username = _a.username, passward = _a.passward;
                 if (!username || !passward) {
-                    ctx.body = responseHelper_1.responseHelper(400);
+                    ctx.body = responseHelper_1.responseHelper(responseHelper_1.RESCODE.REQUESTERROR);
                 }
                 userRepository = typeorm_1.getManager().getRepository(User_1.User);
                 return [4 /*yield*/, userRepository.find({ where: { user_name: username } })];
             case 1:
                 result = _b.sent();
                 if (result.length === 0) {
-                    ctx.body = responseHelper_1.responseHelper(441);
+                    ctx.body = responseHelper_1.responseHelper(responseHelper_1.RESCODE.USERNOTEXIST);
                     return [2 /*return*/];
                 }
                 databaseUsername = result[0].user_name;
@@ -54,10 +54,10 @@ exports.login = function (ctx, next) { return tslib_1.__awaiter(void 0, void 0, 
                         token: userToken,
                         username: databaseUsername
                     };
-                    ctx.body = responseHelper_1.responseHelper(200, result_1);
+                    ctx.body = responseHelper_1.responseHelper(responseHelper_1.RESCODE.SUCCESS, result_1);
                 }
                 else {
-                    ctx.body = responseHelper_1.responseHelper(443);
+                    ctx.body = responseHelper_1.responseHelper(responseHelper_1.RESCODE.PASSWORDERROR);
                 }
                 return [2 /*return*/];
         }
@@ -66,5 +66,24 @@ exports.login = function (ctx, next) { return tslib_1.__awaiter(void 0, void 0, 
 exports.logout = function (ctx, next) {
     var clientToken = ctx.request.header['authorization'];
     // 通过token的payload获取id_card，在redis里面删掉,然后成功登出
-    ctx.body = responseHelper_1.responseHelper(200, { clientToken: clientToken });
+    var userData = jsonwebtoken_1.default.verify(clientToken, config_1.default.secretKey);
+    var idCard = userData.id_card;
+    var redis = new redisHelper_1.default(0);
+    var key = "session:" + idCard;
+    redis.delete(key);
+    ctx.body = responseHelper_1.responseHelper(responseHelper_1.RESCODE.SUCCESS);
 };
+exports.test = function (ctx, next) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
+    return tslib_1.__generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                // ctx.body = responseHelper(RESCODE.SUCCESS)
+                console.log('test - middleware1');
+                return [4 /*yield*/, next()];
+            case 1:
+                _a.sent();
+                console.log(1111);
+                return [2 /*return*/];
+        }
+    });
+}); };

@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = {
-    200: "请求成功",
+    SUCCESS: "请求成功",
     100: "自定义错误",
     440: '用户未登陆',
     441: '用户不存在',
