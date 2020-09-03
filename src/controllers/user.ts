@@ -1,23 +1,13 @@
 import { getManager } from 'typeorm';
 import { Context, Next } from 'koa';
 import { User } from '../entity/User';
+import { Role } from '../entity/Role';
 import { responseHelper, RESCODE } from '../utils/responseHelper';
-import { checkPasswordHash } from '../utils/common'
+import { checkPasswordHash, encrypt } from '../utils/common'
 import { v4 as uuidV4 } from 'uuid'
 import RedisHelper from '../utils/redisHelper';
 import jwt from 'jsonwebtoken';
 import config from '../config';
-import { checkUserRole } from '../services/userAuth';
-
-export const addUser = (ctx: Context, next: Next) => {
-  const userRepository = getManager().getRepository(User);
-  const UserModel = new User;
-  const randomName = Math.floor(Math.random() * 1000);
-  UserModel.user_name = `xiaoming${randomName}`
-  UserModel.password = '123456'
-  userRepository.save(UserModel)
-  ctx.body = '数据更新成功'
-}
 
 export const login = async (ctx: Context, next: Next) => {
   const { body: { username, passward } } = ctx.request;
@@ -68,10 +58,58 @@ export const logout = (ctx: Context, next: Next) => {
   ctx.body = responseHelper(RESCODE.SUCCESS)
 }
 
+export const changePassword = (ctx: Context, next: Next) => {
+  const { body } = ctx.request;
+
+
+}
+
+/**
+ * @description 只有admin用户才有权限增加新用户
+ */
+export const addUser = async (ctx: Context, next: Next) => {
+  const { body } = ctx.request;
+  const { username, password, role_id } = body;
+  if (!username || !password || !role_id) {
+    ctx.body = responseHelper(RESCODE.REQUESTERROR)
+    return;
+  }
+  // 先确定数据库是否已有此用户
+  const userRepository = getManager().getRepository(User);
+  const dbUser = await userRepository.find({ 'user_name': username });
+  if (dbUser.length !== 0) {
+    ctx.body = responseHelper(RESCODE.CUSTOMERROR, '', '用户已存在');
+    return;
+  } else {
+    // 根据roleId寻找对应role
+    const roleRepository = getManager().getRepository(Role);
+    const dbRole = await roleRepository.findByIds([role_id]);
+    if (dbRole.length === 0) {
+      ctx.body = responseHelper(RESCODE.CUSTOMERROR, '', '用户角色不存在');
+      return;
+    }
+    const newUser = new User();
+    newUser.user_name = username;
+    newUser.password = encrypt(password);
+    newUser.roels = [...dbRole];
+    const manager = getManager();
+    await manager.save(newUser);
+    ctx.body = responseHelper(RESCODE.SUCCESS);
+  }
+
+}
+
+export const deleteUser = () => {
+
+}
+
+export const getUserlist = () => {
+
+}
+
 
 export const test = async (ctx: Context, next: Next) => {
   // ctx.body = responseHelper(RESCODE.SUCCESS)
   console.log('test - middleware1')
   await next()
-  console.log(1111)
 }

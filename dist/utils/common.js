@@ -13,5 +13,6 @@ exports.encrypt = function (password) {
     return hmac.digest('hex');
 };
 exports.checkPasswordHash = function (databasePassword, password) {
+    // console.log(databasePassword, encrypt(password))
     return exports.encrypt(password) === databasePassword;
 };

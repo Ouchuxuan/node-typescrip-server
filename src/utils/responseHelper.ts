@@ -1,6 +1,3 @@
-import responseCode from './responseCode';
-
-
 export const RESCODE = {
   SUCCESS: "请求成功",
   CUSTOMERROR: "自定义错误",
@@ -16,10 +13,17 @@ export const RESCODE = {
 }
 
 
-export const responseHelper = (code: string = "SUCCESS", data: unknown = null) => {
+export const responseHelper = (code: string = "SUCCESS", data: unknown = null, message = '') => {
+  if (code === 'CUSTOMERROR') {
+    return {
+      code,
+      data,
+      message,
+    }
+  }
   return {
     code,
     data,
-    message: responseCode[code]
+    message: RESCODE[code]
   }
 }

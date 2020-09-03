@@ -10,12 +10,12 @@ var responseHelper_1 = require("../utils/responseHelper");
 /**
  * @description 检查操作者的用户身份,判断用户是否含有某种身份
  */
-exports.checkUserRole = function (ctx, next) {
+exports.checkUserRole = function () {
     var roleName = [];
-    for (var _i = 2; _i < arguments.length; _i++) {
-        roleName[_i - 2] = arguments[_i];
+    for (var _i = 0; _i < arguments.length; _i++) {
+        roleName[_i] = arguments[_i];
     }
-    return tslib_1.__awaiter(void 0, void 0, void 0, function () {
+    return function (ctx, next) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
         var clientToken, userData, userId, userRepository, dbUserData, dbRoleList, isMatch;
         return tslib_1.__generator(this, function (_a) {
             switch (_a.label) {
@@ -31,13 +31,14 @@ exports.checkUserRole = function (ctx, next) {
                         ctx.body = responseHelper_1.responseHelper(responseHelper_1.RESCODE.NOAUTH);
                         return [2 /*return*/];
                     }
-                    dbRoleList = dbUserData[0].roels;
+                    dbRoleList = dbUserData[0].roels.map(function (item) { return item.role_name; });
                     isMatch = false;
                     roleName.forEach(function (role) {
-                        if (role in dbRoleList) {
+                        if (dbRoleList.includes(role)) {
                             isMatch = true;
                         }
                     });
+                    console.log('isMath', isMatch);
                     if (!isMatch) return [3 /*break*/, 3];
                     return [4 /*yield*/, next()];
                 case 2:
@@ -49,5 +50,5 @@ exports.checkUserRole = function (ctx, next) {
                 case 4: return [2 /*return*/];
             }
         });
-    });
+    }); };
 };

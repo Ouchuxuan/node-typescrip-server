@@ -11,5 +11,6 @@ export const encrypt = (password: string): string => {
 }
 
 export const checkPasswordHash = (databasePassword:string, password:string):boolean => {
+  // console.log(databasePassword, encrypt(password))
   return encrypt(password) === databasePassword;
 }
