@@ -1,6 +1,6 @@
 import { Context, Next } from 'koa';
 import RedisHelper from '../utils/redisHelper';
-import { responseHelper, RESCODE } from '../utils/responseHelper';
+import JsonHelper from '../utils/responseHelper';
 import jwt from 'jsonwebtoken';
 import config from '../config'
 
@@ -29,7 +29,7 @@ export default (whitePath: mathType = '') => {
     }
     const clientToken = ctx.request.header['authorization'];
     if (!clientToken) {
-      ctx.body = responseHelper(RESCODE.NOAUTH);
+      ctx.body = JsonHelper.response('NOAUTH')
       return;
     }
     const userData = jwt.verify(clientToken, config.secretKey);
@@ -38,7 +38,7 @@ export default (whitePath: mathType = '') => {
     const key = `session:${idCard}`;
     const redisUserData = redis.get(key);
     if (!redisUserData) {
-      ctx.body = responseHelper(RESCODE.TOKENEXPIRED);
+      ctx.body = JsonHelper.response('TOKENEXPIRED')
       return;
     }
     await next();

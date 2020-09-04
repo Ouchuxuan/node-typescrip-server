@@ -6,7 +6,7 @@ var typeorm_1 = require("typeorm");
 var User_1 = require("../entity/User");
 var config_1 = tslib_1.__importDefault(require("../config"));
 var jsonwebtoken_1 = tslib_1.__importDefault(require("jsonwebtoken"));
-var responseHelper_1 = require("../utils/responseHelper");
+var responseHelper_1 = tslib_1.__importDefault(require("../utils/responseHelper"));
 /**
  * @description 检查操作者的用户身份,判断用户是否含有某种身份
  */
@@ -28,7 +28,7 @@ exports.checkUserRole = function () {
                 case 1:
                     dbUserData = _a.sent();
                     if (!dbUserData.length) {
-                        ctx.body = responseHelper_1.responseHelper(responseHelper_1.RESCODE.NOAUTH);
+                        ctx.body = responseHelper_1.default.response("NOAUTH");
                         return [2 /*return*/];
                     }
                     dbRoleList = dbUserData[0].roels.map(function (item) { return item.role_name; });
@@ -38,14 +38,13 @@ exports.checkUserRole = function () {
                             isMatch = true;
                         }
                     });
-                    console.log('isMath', isMatch);
                     if (!isMatch) return [3 /*break*/, 3];
                     return [4 /*yield*/, next()];
                 case 2:
                     _a.sent();
                     return [3 /*break*/, 4];
                 case 3:
-                    ctx.body = responseHelper_1.responseHelper(responseHelper_1.RESCODE.NOAUTH);
+                    ctx.body = responseHelper_1.default.response("NOAUTH");
                     _a.label = 4;
                 case 4: return [2 /*return*/];
             }

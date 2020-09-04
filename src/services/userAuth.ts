@@ -3,7 +3,7 @@ import { Context, Next } from 'koa';
 import { User } from '../entity/User';
 import config from '../config'
 import jwt from 'jsonwebtoken';
-import { responseHelper, RESCODE } from '../utils/responseHelper';
+import JsonHelper from '../utils/responseHelper';
 
 /**
  * @description 检查操作者的用户身份,判断用户是否含有某种身份
@@ -18,7 +18,7 @@ export const checkUserRole = (...roleName: string[]) => {
     // 获取该用户的所有身份
     const dbUserData = await userRepository.findByIds([userId]);
     if (!dbUserData.length) {
-      ctx.body = responseHelper(RESCODE.NOAUTH);
+      ctx.body = JsonHelper.response("NOAUTH");
       return;
     }
     const dbRoleList = dbUserData[0].roels.map(item => item.role_name)
@@ -28,11 +28,10 @@ export const checkUserRole = (...roleName: string[]) => {
         isMatch = true;
       }
     })
-    console.log('isMath', isMatch)
     if (isMatch) {
       await next()
     } else {
-      ctx.body = responseHelper(RESCODE.NOAUTH);
+      ctx.body = JsonHelper.response("NOAUTH");
     }
   }
 }

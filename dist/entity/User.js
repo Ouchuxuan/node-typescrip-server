@@ -26,7 +26,8 @@ var User = /** @class */ (function () {
     ], User.prototype, "create_time", void 0);
     tslib_1.__decorate([
         typeorm_1.ManyToMany(function (type) { return Role_1.Role; }, function (role) { return role.users; }, {
-            eager: true
+            eager: true,
+            cascade: true
         }),
         typeorm_1.JoinTable(),
         tslib_1.__metadata("design:type", Array)

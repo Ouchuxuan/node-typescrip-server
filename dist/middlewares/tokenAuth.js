@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = require("tslib");
 var redisHelper_1 = tslib_1.__importDefault(require("../utils/redisHelper"));
-var responseHelper_1 = require("../utils/responseHelper");
+var responseHelper_1 = tslib_1.__importDefault(require("../utils/responseHelper"));
 var jsonwebtoken_1 = tslib_1.__importDefault(require("jsonwebtoken"));
 var config_1 = tslib_1.__importDefault(require("../config"));
 /**
@@ -33,7 +33,7 @@ exports.default = (function (whitePath) {
                 case 2:
                     clientToken = ctx.request.header['authorization'];
                     if (!clientToken) {
-                        ctx.body = responseHelper_1.responseHelper(responseHelper_1.RESCODE.NOAUTH);
+                        ctx.body = responseHelper_1.default.response('NOAUTH');
                         return [2 /*return*/];
                     }
                     userData = jsonwebtoken_1.default.verify(clientToken, config_1.default.secretKey);
@@ -42,7 +42,7 @@ exports.default = (function (whitePath) {
                     key = "session:" + idCard;
                     redisUserData = redis.get(key);
                     if (!redisUserData) {
-                        ctx.body = responseHelper_1.responseHelper(responseHelper_1.RESCODE.TOKENEXPIRED);
+                        ctx.body = responseHelper_1.default.response('TOKENEXPIRED');
                         return [2 /*return*/];
                     }
                     return [4 /*yield*/, next()];

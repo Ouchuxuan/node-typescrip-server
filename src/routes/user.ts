@@ -13,6 +13,9 @@ router.post('/login', controllers.login)
 // api/v1/user/add_user
 router.post('/add_user', checkUserRole('admin'), controllers.addUser)
 
+// api/v1/user/delete_user
+router.get('/delete_user', checkUserRole('admin'), controllers.deleteUser)
+
 // api/v1/user/logout
 router.get('/logout', controllers.logout)
 

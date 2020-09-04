@@ -1,33 +1,71 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.responseHelper = exports.RESCODE = void 0;
-exports.RESCODE = {
-    SUCCESS: "请求成功",
-    CUSTOMERROR: "自定义错误",
-    NOLOGIN: '用户未登陆',
-    USERNOTEXIST: '用户不存在',
-    TOKENEXPIRED: 'token 过期',
-    PASSWORDERROR: '密码错误',
-    VERTIFYERROR: '验证码错误',
-    REQUESTERROR: "请求参数/格式错误",
-    NOAUTH: "没有权限",
-    NOTEXIST: "资源不存在",
-    SERVICEERROR: "服务器异常",
+var RES_CODE_MAP = {
+    SUCCESS: {
+        message: '请求成功',
+        code: 200
+    },
+    CUSTOMERROR: {
+        message: '自定义错误',
+        code: 100
+    },
+    NOLOGIN: {
+        message: '用户未登陆',
+        code: 100
+    },
+    USERNOTEXIST: {
+        message: '用户不存在',
+        code: 100
+    },
+    TOKENEXPIRED: {
+        message: 'token 过期',
+        code: 100
+    },
+    PASSWORDERROR: {
+        message: '密码错误',
+        code: 100
+    },
+    VERTIFYERROR: {
+        message: '验证码错误',
+        code: 100
+    },
+    REQUESTERROR: {
+        message: '请求参数/格式错误',
+        code: 100
+    },
+    NOAUTH: {
+        message: '没有权限',
+        code: 100
+    },
+    NOTEXIST: {
+        message: '资源不存在',
+        code: 100
+    },
+    SERVICEERROR: {
+        message: '服务器异常',
+        code: 100
+    },
 };
-exports.responseHelper = function (code, data, message) {
-    if (code === void 0) { code = "SUCCESS"; }
-    if (data === void 0) { data = null; }
-    if (message === void 0) { message = ''; }
-    if (code === 'CUSTOMERROR') {
+var JsonHelper = /** @class */ (function () {
+    function JsonHelper() {
+    }
+    JsonHelper.response = function (code, data) {
+        if (code === void 0) { code = "SUCCESS"; }
+        if (data === void 0) { data = null; }
         return {
-            code: code,
+            code: JsonHelper.RESCODE[code].code,
+            message: JsonHelper.RESCODE[code].message,
             data: data,
+        };
+    };
+    JsonHelper.custom = function (message) {
+        if (message === void 0) { message = ''; }
+        return {
+            code: JsonHelper.RESCODE['CUSTOMERROR'].code,
             message: message,
         };
-    }
-    return {
-        code: code,
-        data: data,
-        message: exports.RESCODE[code]
     };
-};
+    JsonHelper.RESCODE = RES_CODE_MAP;
+    return JsonHelper;
+}());
+exports.default = JsonHelper;

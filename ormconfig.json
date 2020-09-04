@@ -6,7 +6,7 @@
    "password": "yundun2733",
    "database": "node_cloudmap3",
    "synchronize": false,
-   "logging": true,
+   "logging": false,
    "maxQueryExecutionTime":true,
    "entities": [
       "dist/entity/**/*.js"

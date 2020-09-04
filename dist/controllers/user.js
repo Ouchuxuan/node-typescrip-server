@@ -5,7 +5,7 @@ var tslib_1 = require("tslib");
 var typeorm_1 = require("typeorm");
 var User_1 = require("../entity/User");
 var Role_1 = require("../entity/Role");
-var responseHelper_1 = require("../utils/responseHelper");
+var responseHelper_1 = tslib_1.__importDefault(require("../utils/responseHelper"));
 var common_1 = require("../utils/common");
 var uuid_1 = require("uuid");
 var redisHelper_1 = tslib_1.__importDefault(require("../utils/redisHelper"));
@@ -18,14 +18,14 @@ exports.login = function (ctx, next) { return tslib_1.__awaiter(void 0, void 0, 
             case 0:
                 _a = ctx.request.body, username = _a.username, passward = _a.passward;
                 if (!username || !passward) {
-                    ctx.body = responseHelper_1.responseHelper(responseHelper_1.RESCODE.REQUESTERROR);
+                    ctx.body = responseHelper_1.default.response("REQUESTERROR");
                 }
                 userRepository = typeorm_1.getManager().getRepository(User_1.User);
                 return [4 /*yield*/, userRepository.find({ where: { user_name: username } })];
             case 1:
                 result = _b.sent();
                 if (result.length === 0) {
-                    ctx.body = responseHelper_1.responseHelper(responseHelper_1.RESCODE.USERNOTEXIST);
+                    ctx.body = responseHelper_1.default.response('USERNOTEXIST');
                     return [2 /*return*/];
                 }
                 databaseUsername = result[0].user_name;
@@ -46,10 +46,10 @@ exports.login = function (ctx, next) { return tslib_1.__awaiter(void 0, void 0, 
                         token: userToken,
                         username: databaseUsername
                     };
-                    ctx.body = responseHelper_1.responseHelper(responseHelper_1.RESCODE.SUCCESS, result_1);
+                    ctx.body = responseHelper_1.default.response('SUCCESS', result_1);
                 }
                 else {
-                    ctx.body = responseHelper_1.responseHelper(responseHelper_1.RESCODE.PASSWORDERROR);
+                    ctx.body = responseHelper_1.default.response('PASSWORDERROR');
                 }
                 return [2 /*return*/];
         }
@@ -63,11 +63,39 @@ exports.logout = function (ctx, next) {
     var redis = new redisHelper_1.default(0);
     var key = "session:" + idCard;
     redis.delete(key);
-    ctx.body = responseHelper_1.responseHelper(responseHelper_1.RESCODE.SUCCESS);
+    ctx.body = responseHelper_1.default.response();
 };
-exports.changePassword = function (ctx, next) {
-    var body = ctx.request.body;
-};
+exports.changePassword = function (ctx, next) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
+    var _a, username, password, old_password, manager, dbUserData, dbPassword;
+    return tslib_1.__generator(this, function (_b) {
+        switch (_b.label) {
+            case 0:
+                _a = ctx.request.body, username = _a.username, password = _a.password, old_password = _a.old_password;
+                if (!username || !password || !old_password) {
+                    ctx.body = responseHelper_1.default.response("REQUESTERROR");
+                    return [2 /*return*/];
+                }
+                manager = typeorm_1.getManager();
+                return [4 /*yield*/, manager.getRepository(User_1.User).find({ user_name: username })];
+            case 1:
+                dbUserData = _b.sent();
+                if (dbUserData.length === 0) {
+                    ctx.body = responseHelper_1.default.response("USERNOTEXIST");
+                    return [2 /*return*/];
+                }
+                dbPassword = dbUserData[0].password;
+                if (common_1.encrypt(old_password) !== dbPassword) {
+                    ctx.body = responseHelper_1.default.response("PASSWORDERROR");
+                    return [2 /*return*/];
+                }
+                return [4 /*yield*/, manager.update(User_1.User, { user_name: username }, { password: common_1.encrypt(password) })];
+            case 2:
+                _b.sent();
+                ctx.body = responseHelper_1.default.response();
+                return [2 /*return*/];
+        }
+    });
+}); };
 /**
  * @description 只有admin用户才有权限增加新用户
  */
@@ -79,7 +107,7 @@ exports.addUser = function (ctx, next) { return tslib_1.__awaiter(void 0, void 0
                 body = ctx.request.body;
                 username = body.username, password = body.password, role_id = body.role_id;
                 if (!username || !password || !role_id) {
-                    ctx.body = responseHelper_1.responseHelper(responseHelper_1.RESCODE.REQUESTERROR);
+                    ctx.body = responseHelper_1.default.response("REQUESTERROR");
                     return [2 /*return*/];
                 }
                 userRepository = typeorm_1.getManager().getRepository(User_1.User);
@@ -87,7 +115,7 @@ exports.addUser = function (ctx, next) { return tslib_1.__awaiter(void 0, void 0
             case 1:
                 dbUser = _a.sent();
                 if (!(dbUser.length !== 0)) return [3 /*break*/, 2];
-                ctx.body = responseHelper_1.responseHelper(responseHelper_1.RESCODE.CUSTOMERROR, '', '用户已存在');
+                ctx.body = responseHelper_1.default.custom('用户已存在');
                 return [2 /*return*/];
             case 2:
                 roleRepository = typeorm_1.getManager().getRepository(Role_1.Role);
@@ -95,7 +123,7 @@ exports.addUser = function (ctx, next) { return tslib_1.__awaiter(void 0, void 0
             case 3:
                 dbRole = _a.sent();
                 if (dbRole.length === 0) {
-                    ctx.body = responseHelper_1.responseHelper(responseHelper_1.RESCODE.CUSTOMERROR, '', '用户角色不存在');
+                    ctx.body = responseHelper_1.default.custom('用户角色不存在');
                     return [2 /*return*/];
                 }
                 newUser = new User_1.User();
@@ -106,14 +134,37 @@ exports.addUser = function (ctx, next) { return tslib_1.__awaiter(void 0, void 0
                 return [4 /*yield*/, manager.save(newUser)];
             case 4:
                 _a.sent();
-                ctx.body = responseHelper_1.responseHelper(responseHelper_1.RESCODE.SUCCESS);
+                ctx.body = responseHelper_1.default.response('SUCCESS');
                 _a.label = 5;
             case 5: return [2 /*return*/];
         }
     });
 }); };
-exports.deleteUser = function () {
-};
+exports.deleteUser = function (ctx, next) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
+    var _a, user_id, role_id, manager;
+    return tslib_1.__generator(this, function (_b) {
+        switch (_b.label) {
+            case 0:
+                _a = ctx.request.query, user_id = _a.user_id, role_id = _a.role_id;
+                if (!user_id || !role_id) {
+                    ctx.body = responseHelper_1.default.response("REQUESTERROR");
+                }
+                manager = typeorm_1.getManager();
+                // 1.删除中间表的记录；
+                return [4 /*yield*/, manager.createQueryBuilder().relation(User_1.User, 'roels').of(user_id).remove(role_id)];
+            case 1:
+                // 1.删除中间表的记录；
+                _b.sent();
+                // 2.删除角色表的记录
+                return [4 /*yield*/, manager.createQueryBuilder().delete().from(User_1.User).where('id=:user_id', { user_id: user_id }).execute()];
+            case 2:
+                // 2.删除角色表的记录
+                _b.sent();
+                ctx.body = responseHelper_1.default.response();
+                return [2 /*return*/];
+        }
+    });
+}); };
 exports.getUserlist = function () {
 };
 exports.test = function (ctx, next) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {

@@ -19,7 +19,8 @@ export class User {
     create_time: Date;
 
     @ManyToMany(type => Role, role => role.users, {
-        eager: true
+        eager: true,
+        cascade:true
     })
     @JoinTable()
     roels: Role[]
