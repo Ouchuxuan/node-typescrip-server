@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.test = exports.getUserlist = exports.deleteUser = exports.addUser = exports.changePassword = exports.logout = exports.login = void 0;
+exports.test = exports.getRoleByUserId = exports.getRoleList = exports.getUserlist = exports.deleteUser = exports.addUser = exports.changePassword = exports.logout = exports.login = void 0;
 var tslib_1 = require("tslib");
 var typeorm_1 = require("typeorm");
 var User_1 = require("../entity/User");
@@ -96,9 +96,6 @@ exports.changePassword = function (ctx, next) { return tslib_1.__awaiter(void 0,
         }
     });
 }); };
-/**
- * @description 只有admin用户才有权限增加新用户
- */
 exports.addUser = function (ctx, next) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
     var body, username, password, role_id, userRepository, dbUser, roleRepository, dbRole, newUser, manager;
     return tslib_1.__generator(this, function (_a) {
@@ -165,18 +162,66 @@ exports.deleteUser = function (ctx, next) { return tslib_1.__awaiter(void 0, voi
         }
     });
 }); };
-exports.getUserlist = function () {
-};
-exports.test = function (ctx, next) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
+exports.getUserlist = function (ctx, next) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
+    var dbUserData, result;
+    return tslib_1.__generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, typeorm_1.getManager().getRepository(User_1.User).find()];
+            case 1:
+                dbUserData = _a.sent();
+                result = dbUserData.map(function (item) {
+                    return {
+                        id: item.id,
+                        create_time: item.create_time,
+                        user_name: item.user_name,
+                    };
+                });
+                ctx.body = responseHelper_1.default.response('SUCCESS', { items: result });
+                return [2 /*return*/];
+        }
+    });
+}); };
+/**
+ * @description 获取所有角色信息
+ */
+exports.getRoleList = function (ctx, next) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
+    var dbRoleData;
+    return tslib_1.__generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, typeorm_1.getManager().getRepository(Role_1.Role).find()];
+            case 1:
+                dbRoleData = _a.sent();
+                ctx.body = responseHelper_1.default.response('SUCCESS', dbRoleData);
+                return [2 /*return*/];
+        }
+    });
+}); };
+exports.getRoleByUserId = function (ctx, next) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
+    var username, dbUserData, dbRoleData;
     return tslib_1.__generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                // ctx.body = responseHelper(RESCODE.SUCCESS)
-                console.log('test - middleware1');
-                return [4 /*yield*/, next()];
+                username = ctx.request.query.username;
+                if (!username) {
+                    ctx.body = responseHelper_1.default.response('REQUESTERROR');
+                    return [2 /*return*/];
+                }
+                return [4 /*yield*/, typeorm_1.getManager().getRepository(User_1.User).find({ user_name: username })];
             case 1:
-                _a.sent();
+                dbUserData = _a.sent();
+                if (dbUserData.length === 0) {
+                    ctx.body = responseHelper_1.default.response('USERNOTEXIST');
+                    return [2 /*return*/];
+                }
+                dbRoleData = dbUserData[0].roels[0];
+                ctx.body = responseHelper_1.default.response('SUCCESS', dbRoleData);
                 return [2 /*return*/];
         }
+    });
+}); };
+exports.test = function (ctx, next) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
+    return tslib_1.__generator(this, function (_a) {
+        ctx.body = responseHelper_1.default.response('SUCCESS');
+        return [2 /*return*/];
     });
 }); };

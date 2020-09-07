@@ -16,6 +16,15 @@ router.post('/add_user', checkUserRole('admin'), controllers.addUser)
 // api/v1/user/delete_user
 router.get('/delete_user', checkUserRole('admin'), controllers.deleteUser)
 
+// api/v1/user/get_list
+router.get('/get_list', checkUserRole('admin'), controllers.getUserlist)
+
+// api/v1/user/get_role_list
+router.get('/get_role_list', checkUserRole('admin'), controllers.getRoleList)
+
+// api/v1/user/get_role_by_user_id
+router.get('/get_role_by_user_id', controllers.getRoleByUserId)
+
 // api/v1/user/logout
 router.get('/logout', controllers.logout)
 
@@ -24,9 +33,6 @@ router.post('/change_password', controllers.changePassword)
 
 
 // api/v1/user/test
-router.get('/test', controllers.test, (ctx, next) => {
-  console.log('test - middleware2')
-  ctx.body = ''
-})
+router.get('/test', controllers.test)
 
 export default router

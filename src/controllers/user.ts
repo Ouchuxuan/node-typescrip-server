@@ -82,9 +82,6 @@ export const changePassword = async (ctx: Context, next: Next) => {
 
 }
 
-/**
- * @description 只有admin用户才有权限增加新用户
- */
 export const addUser = async (ctx: Context, next: Next) => {
   const { body } = ctx.request;
   const { username, password, role_id } = body;
@@ -130,13 +127,45 @@ export const deleteUser = async (ctx: Context, next: Next) => {
   ctx.body = JsonHelper.response()
 }
 
-export const getUserlist = () => {
+export const getUserlist = async (ctx: Context, next: Next) => {
+  const dbUserData = await getManager().getRepository(User).find();
+  const result = dbUserData.map(item => {
+    return {
+      id: item.id,
+      create_time: item.create_time,
+      user_name: item.user_name,
+    }
+  })
+  ctx.body = JsonHelper.response('SUCCESS', { items: result })
+
+}
+
+/**
+ * @description 获取所有角色信息 
+ */
+export const getRoleList = async (ctx: Context, next: Next) => {
+  const dbRoleData = await getManager().getRepository(Role).find();
+  ctx.body = JsonHelper.response('SUCCESS', dbRoleData)
+}
+
+export const getRoleByUserId = async (ctx: Context, next: Next) => {
+  const { username } = ctx.request.query;
+  if (!username) {
+    ctx.body = JsonHelper.response('REQUESTERROR');
+    return;
+  }
+  // 获取用户信息
+  const dbUserData = await getManager().getRepository(User).find({ user_name: username });
+  if (dbUserData.length === 0) {
+    ctx.body = JsonHelper.response('USERNOTEXIST');
+    return;
+  }
+  const dbRoleData = dbUserData[0].roels[0];
+  ctx.body = JsonHelper.response('SUCCESS', dbRoleData)
 
 }
 
 
 export const test = async (ctx: Context, next: Next) => {
-  // ctx.body = responseHelper(RESCODE.SUCCESS)
-  console.log('test - middleware1')
-  await next()
+  ctx.body = JsonHelper.response('SUCCESS')
 }
