@@ -3,23 +3,26 @@ import "reflect-metadata";
 import path from 'path';
 import views from 'koa-views';
 import bodyParser from 'koa-bodyparser'
-import { createConnection } from "typeorm";
+import cors from '@koa/cors'
 import appRouter from './routes/index';
 import loggerMiddleware from './middlewares/log';
 import tokenAuthMiddleware from './middlewares/tokenAuth';
+import { createConnection } from "typeorm";
 import config from './config'
 
 // class-validator 用于表单校验
-
 const app = new Koa();
 
 // middlewares
 app.use(loggerMiddleware())
+// 跨域处理
+app.use(cors())
 // 配置静态web服务器的中间件
 app.use(bodyParser())
 app.use(views(path.join(__dirname, '../src/views'), {
   extension: 'html'
 }))
+
 
 // databases
 const connectDatabase = async () => {
@@ -50,7 +53,7 @@ app.use(async (ctx, next) => {
 });
 
 
-app.use(tokenAuthMiddleware(/\/login/));
+app.use(tokenAuthMiddleware(/\/login/,/\/downloadfile/));
 
 // router
 appRouter.forEach(router => {

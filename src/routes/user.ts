@@ -32,7 +32,7 @@ router.get('/logout', controllers.logout)
 router.post('/change_password', controllers.changePassword)
 
 
-// api/v1/user/test
-router.get('/test', controllers.test)
+// api/v1/user/downloadfile
+router.get('/downloadfile', controllers.downloadfile)
 
 export default router

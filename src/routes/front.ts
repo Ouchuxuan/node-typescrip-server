@@ -1,8 +1,8 @@
 import Router from 'koa-router'
-import * as Koa from 'koa'
+import { Context, Next } from 'koa';
 const router = new Router()
 
-router.get('/', async (ctx:Koa.BaseContext) => {
+router.get('/', async (ctx:Context) => {
   await ctx.render('index')
 })
 

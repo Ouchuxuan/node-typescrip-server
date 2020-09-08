@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.checkPasswordHash = exports.encrypt = void 0;
+exports.streamToBuffer = exports.checkPasswordHash = exports.encrypt = void 0;
 var tslib_1 = require("tslib");
 var crypto_1 = tslib_1.__importDefault(require("crypto"));
 var config_1 = tslib_1.__importDefault(require("../config"));
@@ -15,4 +15,12 @@ exports.encrypt = function (password) {
 exports.checkPasswordHash = function (databasePassword, password) {
     // console.log(databasePassword, encrypt(password))
     return exports.encrypt(password) === databasePassword;
+};
+exports.streamToBuffer = function (stream) {
+    return new Promise(function (resolve, reject) {
+        var buffers = [];
+        stream.on('error', reject);
+        stream.on('data', function (data) { return buffers.push(data); });
+        stream.on('end', function () { return resolve(Buffer.concat(buffers)); });
+    });
 };

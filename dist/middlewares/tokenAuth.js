@@ -8,22 +8,30 @@ var config_1 = tslib_1.__importDefault(require("../config"));
 /**
  * @description 路由token权限控制,token过期登出,token不过期则await next
  */
-exports.default = (function (whitePath) {
-    if (whitePath === void 0) { whitePath = ''; }
+exports.default = (function () {
+    var whitePath = [];
+    for (var _i = 0; _i < arguments.length; _i++) {
+        whitePath[_i] = arguments[_i];
+    }
     return function (ctx, next) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
-        var isReg, url, isMatch, clientToken, userData, idCard, redis, key, redisUserData;
+        var isMatch, _i, whitePath_1, path, isReg, url, clientToken, userData, idCard, redis, key, redisUserData;
         return tslib_1.__generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    if (!whitePath) return [3 /*break*/, 2];
-                    isReg = whitePath instanceof RegExp;
-                    url = ctx.URL.href;
+                    if (!(whitePath.length >= 0)) return [3 /*break*/, 2];
                     isMatch = false;
-                    if (isReg) {
-                        isMatch = whitePath.test(url);
-                    }
-                    else {
-                        isMatch = whitePath === url;
+                    for (_i = 0, whitePath_1 = whitePath; _i < whitePath_1.length; _i++) {
+                        path = whitePath_1[_i];
+                        isReg = path instanceof RegExp;
+                        url = ctx.URL.href;
+                        if (isReg) {
+                            isMatch = path.test(url);
+                        }
+                        else {
+                            isMatch = path === url;
+                        }
+                        if (isMatch)
+                            break;
                     }
                     if (!isMatch) return [3 /*break*/, 2];
                     return [4 /*yield*/, next()];

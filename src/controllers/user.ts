@@ -3,11 +3,13 @@ import { Context, Next } from 'koa';
 import { User } from '../entity/User';
 import { Role } from '../entity/Role';
 import JsonHelper from '../utils/responseHelper';
-import { checkPasswordHash, encrypt } from '../utils/common'
+import { checkPasswordHash, encrypt, streamToBuffer } from '../utils/common'
 import { v4 as uuidV4 } from 'uuid'
 import RedisHelper from '../utils/redisHelper';
 import jwt from 'jsonwebtoken';
 import config from '../config';
+import path from 'path';
+import fs from 'fs';
 
 export const login = async (ctx: Context, next: Next) => {
   const { body: { username, passward } } = ctx.request;
@@ -165,7 +167,11 @@ export const getRoleByUserId = async (ctx: Context, next: Next) => {
 
 }
 
-
-export const test = async (ctx: Context, next: Next) => {
-  ctx.body = JsonHelper.response('SUCCESS')
+// 测试前端文件下载
+export const downloadfile = async (ctx: Context, next: Next) => {
+  const downloadFilePath = path.resolve(process.cwd(), './files/test.txt');
+  const fileReader = fs.createReadStream(downloadFilePath)
+  const content = await streamToBuffer(fileReader);
+  console.log('content', content)
+  ctx.body = JsonHelper.response('SUCCESS', content);
 }

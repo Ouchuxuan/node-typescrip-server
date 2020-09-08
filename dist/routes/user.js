@@ -23,6 +23,6 @@ router.get('/get_role_by_user_id', controllers.getRoleByUserId);
 router.get('/logout', controllers.logout);
 // api/v1/user/change_password
 router.post('/change_password', controllers.changePassword);
-// api/v1/user/test
-router.get('/test', controllers.test);
+// api/v1/user/downloadfile
+router.get('/downloadfile', controllers.downloadfile);
 exports.default = router;

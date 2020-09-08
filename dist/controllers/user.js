@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.test = exports.getRoleByUserId = exports.getRoleList = exports.getUserlist = exports.deleteUser = exports.addUser = exports.changePassword = exports.logout = exports.login = void 0;
+exports.downloadfile = exports.getRoleByUserId = exports.getRoleList = exports.getUserlist = exports.deleteUser = exports.addUser = exports.changePassword = exports.logout = exports.login = void 0;
 var tslib_1 = require("tslib");
 var typeorm_1 = require("typeorm");
 var User_1 = require("../entity/User");
@@ -11,6 +11,8 @@ var uuid_1 = require("uuid");
 var redisHelper_1 = tslib_1.__importDefault(require("../utils/redisHelper"));
 var jsonwebtoken_1 = tslib_1.__importDefault(require("jsonwebtoken"));
 var config_1 = tslib_1.__importDefault(require("../config"));
+var path_1 = tslib_1.__importDefault(require("path"));
+var fs_1 = tslib_1.__importDefault(require("fs"));
 exports.login = function (ctx, next) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
     var _a, username, passward, userRepository, result, databaseUsername, databasePassword, userId, idCard, userToken, redis, key, result_1;
     return tslib_1.__generator(this, function (_b) {
@@ -219,9 +221,20 @@ exports.getRoleByUserId = function (ctx, next) { return tslib_1.__awaiter(void 0
         }
     });
 }); };
-exports.test = function (ctx, next) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
+// 测试前端文件下载
+exports.downloadfile = function (ctx, next) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
+    var downloadFilePath, fileReader, content;
     return tslib_1.__generator(this, function (_a) {
-        ctx.body = responseHelper_1.default.response('SUCCESS');
-        return [2 /*return*/];
+        switch (_a.label) {
+            case 0:
+                downloadFilePath = path_1.default.resolve(process.cwd(), './files/test.txt');
+                fileReader = fs_1.default.createReadStream(downloadFilePath);
+                return [4 /*yield*/, common_1.streamToBuffer(fileReader)];
+            case 1:
+                content = _a.sent();
+                console.log('content', content);
+                ctx.body = responseHelper_1.default.response('SUCCESS', content);
+                return [2 /*return*/];
+        }
     });
 }); };

@@ -14,6 +14,7 @@
   "author": "Ouchuxuan",
   "license": "ISC",
   "dependencies": {
+    "@koa/cors": "^3.1.0",
     "ioredis": "^4.17.3",
     "jsonwebtoken": "^8.5.1",
     "koa": "^2.13.0",
@@ -37,6 +38,7 @@
     "@types/koa-router": "^7.4.1",
     "@types/koa-static": "^4.0.1",
     "@types/koa-views": "^2.0.4",
+    "@types/koa__cors": "^3.0.1",
     "@types/node": "^8.0.29",
     "@types/uuid": "^8.3.0",
     "ts-node": "3.3.0",

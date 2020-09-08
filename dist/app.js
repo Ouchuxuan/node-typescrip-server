@@ -6,15 +6,18 @@ require("reflect-metadata");
 var path_1 = tslib_1.__importDefault(require("path"));
 var koa_views_1 = tslib_1.__importDefault(require("koa-views"));
 var koa_bodyparser_1 = tslib_1.__importDefault(require("koa-bodyparser"));
-var typeorm_1 = require("typeorm");
+var cors_1 = tslib_1.__importDefault(require("@koa/cors"));
 var index_1 = tslib_1.__importDefault(require("./routes/index"));
 var log_1 = tslib_1.__importDefault(require("./middlewares/log"));
 var tokenAuth_1 = tslib_1.__importDefault(require("./middlewares/tokenAuth"));
+var typeorm_1 = require("typeorm");
 var config_1 = tslib_1.__importDefault(require("./config"));
 // class-validator 用于表单校验
 var app = new koa_1.default();
 // middlewares
 app.use(log_1.default());
+// 跨域处理
+app.use(cors_1.default());
 // 配置静态web服务器的中间件
 app.use(koa_bodyparser_1.default());
 app.use(koa_views_1.default(path_1.default.join(__dirname, '../src/views'), {
@@ -67,7 +70,7 @@ app.use(function (ctx, next) { return tslib_1.__awaiter(void 0, void 0, void 0, 
         }
     });
 }); });
-app.use(tokenAuth_1.default(/\/login/));
+app.use(tokenAuth_1.default(/\/login/, /\/downloadfile/));
 // router
 index_1.default.forEach(function (router) {
     app.use(router.routes()).use(router.allowedMethods());
